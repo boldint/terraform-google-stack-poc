@@ -4,22 +4,10 @@ variable "gke_suffix" {
   description = "The suffix to be appended to the full cluster name (required)"
 }
 
-variable "gke_regional" {
-  type        = bool
-  description = "Whether is a regional cluster (zonal cluster if set false. WARNING: changing this after cluster creation is destructive!)"
-  default     = true
-}
-
 variable "gke_region" {
   type        = string
   description = "The region to host the cluster in (optional if zonal cluster / required if regional)"
   default     = null
-}
-
-variable "gke_zones" {
-  type        = list(string)
-  description = "The zones to host the cluster in (optional if regional cluster / required if zonal)"
-  default     = []
 }
 
 variable "gke_network_project_id" {
@@ -31,18 +19,6 @@ variable "gke_network_project_id" {
 variable "gke_subnetwork" {
   type        = string
   description = "The subnetwork to host the cluster in (required)"
-}
-
-variable "gke_kubernetes_version" {
-  type        = string
-  description = "The Kubernetes version of the masters. If set to 'latest' it will pull latest available version in the selected region."
-  default     = "latest"
-}
-
-variable "gke_master_authorized_networks" {
-  type        = list(object({ cidr_block = string, display_name = string }))
-  description = "List of master authorized networks. If none are provided, disallow external access (except the cluster node IPs, which GKE automatically whitelists)."
-  default     = []
 }
 
 variable "gke_enable_vertical_pod_autoscaling" {
@@ -265,12 +241,6 @@ variable "gke_monitoring_service" {
   default     = "monitoring.googleapis.com/kubernetes"
 }
 
-variable "gke_create_service_account" {
-  type        = bool
-  description = "Defines if service account specified to run nodes should be created."
-  default     = true
-}
-
 variable "gke_grant_registry_access" {
   type        = bool
   description = "Grants created cluster-specific service account storage.objectViewer role."
@@ -281,12 +251,6 @@ variable "gke_registry_project_ids" {
   type        = list(string)
   description = "Projects holding Google Container Registries. If empty, we use the cluster project. If a service account is created and the `grant_registry_access` variable is set to `true`, the `storage.objectViewer` role is assigned on these projects."
   default     = []
-}
-
-variable "gke_service_account" {
-  type        = string
-  description = "The service account to run nodes as if not overridden in `node_pools`. The create_service_account variable default value (true) will cause a cluster-specific service account to be created."
-  default     = ""
 }
 
 variable "gke_basic_auth_username" {
@@ -316,12 +280,6 @@ variable "gke_cluster_resource_labels" {
   type        = map(string)
   description = "The GCE resource labels (a map of key/value pairs) to be applied to the cluster"
   default     = {}
-}
-
-variable "gke_skip_provisioners" {
-  type        = bool
-  description = "Flag to skip all local-exec provisioners. It breaks `stub_domains` and `upstream_nameservers` variables functionality."
-  default     = false
 }
 
 variable "gke_default_max_pods_per_node" {
@@ -361,11 +319,6 @@ variable "gke_enable_shielded_nodes" {
   type        = bool
   description = "Enable Shielded Nodes features on all nodes in this cluster"
   default     = true
-}
-
-variable "gke_enable_binary_authorization" {
-  description = "Enable BinAuthZ Admission controller"
-  default     = false
 }
 
 variable "gke_add_cluster_firewall_rules" {
@@ -428,8 +381,14 @@ variable "gke_enable_private_nodes" {
   default     = false
 }
 
-variable "gke_enable_private_endpoint" {
+variable "gke_master_ipv4_cidr_block" {
+  type        = string
+  description = "(Beta) The IP range in CIDR notation to use for the hosted master network"
+  default     = "10.0.0.0/28"
+}
+
+variable "asm_enable_all" {
+  description = "Sets `--enable_all` option if true."
   type        = bool
-  description = "(Beta) Whether the master's internal IP address is used as the cluster endpoint"
   default     = false
 }
