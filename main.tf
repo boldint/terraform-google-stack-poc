@@ -1,12 +1,3 @@
-# Get available kubernetes versions, to be used in GKE!
-# Only minor version changes will be tolerated!
-data "google_container_engine_versions" "gke_version" {
-  provider       = google-beta
-  location       = var.gke_region
-  project        = var.project_id
-  version_prefix = "1.19."
-}
-
 # Random resource to add in naming, to avoid naming conflicts
 # and GCP resource destruction policy.
 resource "random_id" "random" {
@@ -30,31 +21,27 @@ module "naming" {
 }
 
 module "gke" {
-  source                  = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
-  version                 = "15.0.1"
-  project_id              = var.project_id
-  name                    = format("%s-%s-%s", module.naming.id, var.gke_suffix, random_id.random.hex)
-  regional                = var.gke_regional
-  region                  = var.gke_region
-  kubernetes_version      = data.google_container_engine_versions.gke_version.latest_master_version
-  release_channel         = var.gke_release_channel
-  network                 = var.vpc_network
-  subnetwork              = var.gke_subnetwork
-  ip_range_pods           = var.gke_ip_range_pods
-  ip_range_services       = var.gke_ip_range_services
-  create_service_account  = var.gke_create_service_account
-  enable_private_endpoint = var.gke_enable_private_endpoint
-  enable_private_nodes    = var.gke_enable_private_nodes
-  #  service_account             = var.compute_engine_service_account
-  enable_binary_authorization       = var.gke_enable_binary_authorization
-  skip_provisioners                 = var.gke_skip_provisioners
-  master_authorized_networks        = var.gke_master_authorized_networks
-  zones                             = var.gke_zones
+  source                            = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
+  version                           = "15.0.1"
+  project_id                        = var.project_id
+  name                              = format("%s-%s-%s", module.naming.id, var.gke_suffix, random_id.random.hex)
+  region                            = var.gke_region
+  release_channel                   = var.gke_release_channel
+  network                           = var.vpc_network
+  subnetwork                        = var.gke_subnetwork
+  ip_range_pods                     = var.gke_ip_range_pods
+  ip_range_services                 = var.gke_ip_range_services
+  enable_private_nodes              = var.gke_enable_private_nodes
   firewall_inbound_ports            = var.gke_firewall_inbound_ports
   add_master_webhook_firewall_rules = var.gke_add_master_webhook_firewall_rules
+  horizontal_pod_autoscaling        = var.gke_horizontal_pod_autoscaling
+  master_ipv4_cidr_block            = var.gke_master_ipv4_cidr_block
+  cluster_ipv4_cidr                 = var.gke_cluster_ipv4_cidr
+  network_policy                    = var.gke_network_policy
+  default_max_pods_per_node         = var.gke_default_max_pods_per_node
+  node_pools                        = var.gke_node_pools
 }
 
-/*
 module "asm-gke" {
   source           = "terraform-google-modules/kubernetes-engine/google//modules/asm"
   version          = "15.0.1"
@@ -63,9 +50,8 @@ module "asm-gke" {
   cluster_name     = module.gke.name
   location         = module.gke.location
   cluster_endpoint = module.gke.endpoint
-
+  enable_all       = var.asm_enable_all
 }
-*/
 
 # Cloud SQL (PostgreSQL)
 module "postgresql_private_service_access" {
