@@ -387,7 +387,7 @@ variable "gke_master_ipv4_cidr_block" {
   default     = "10.0.0.0/28"
 }
 
-variable "asm_enable_all" {
+variable "gke_asm_enable_all" {
   description = "Sets `--enable_all` option if true."
   type        = bool
   default     = false

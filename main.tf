@@ -50,8 +50,9 @@ module "asm-gke" {
   cluster_name     = module.gke.name
   location         = module.gke.location
   cluster_endpoint = module.gke.endpoint
-  enable_all       = var.asm_enable_all
+  enable_all       = var.gke_asm_enable_all
 }
+
 
 # Cloud SQL (PostgreSQL)
 module "postgresql_private_service_access" {
