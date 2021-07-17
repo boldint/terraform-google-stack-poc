@@ -7,17 +7,16 @@ module "mpro" {
   project_id        = "bold-cd-playground-oscar"
   vpc_network       = "bold-cd-playground-oscar-vpc1"
   # GKE
-  gke_region                  = "europe-west1"
-  gke_release_channel         = "UNSPECIFIED"
-  gke_enable_private_nodes    = true
-  gke_enable_private_endpoint = true
-  gke_kubernetes_version      = "1.19"
-  gke_regional                = false
-  gke_suffix                  = "gke"
-  gke_subnetwork              = "bold-cd-playground-oscar-vpc1-gke1"
-  gke_ip_range_pods           = "bold-cd-playground-oscar-vpc1-gke1-pods"
-  gke_ip_range_services       = "bold-cd-playground-oscar-vpc1-gke1-services"
-  gke_create_service_account  = false
+  gke_region                 = "europe-west1"
+  gke_release_channel        = "UNSPECIFIED"
+  gke_enable_private_nodes   = true
+  gke_kubernetes_version     = "1.19"
+  gke_regional               = false
+  gke_suffix                 = "gke"
+  gke_subnetwork             = "bold-cd-playground-oscar-vpc1-gke1"
+  gke_ip_range_pods          = "bold-cd-playground-oscar-vpc1-gke1-pods"
+  gke_ip_range_services      = "bold-cd-playground-oscar-vpc1-gke1-services"
+  gke_create_service_account = false
   gke_master_authorized_networks = [
     {
       cidr_block   = "10.128.0.0/17"
