@@ -44,9 +44,9 @@ jobs:
           tflint_rulesets: "google"
           flags: "--module"
 
-      #- name: Plan example
-      #  id: plan_example
-      #  run: terraform -chdir=examples plan
+      - name: Plan example
+        id: plan_example
+        run: terraform -chdir=examples plan -out=tfplan
 
       # The following step runs a Terraform plan
       - name: Run infracost diff
@@ -55,7 +55,7 @@ jobs:
           INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
         with:
           entrypoint: /scripts/ci/diff.sh # Do not change
-          path: examples/
+          path: examples/tfplan
 
       - name: Run Checkov action
         id: checkov
