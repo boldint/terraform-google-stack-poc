@@ -63,10 +63,10 @@ jobs:
         with:
           directory: examples/
 
-      - name: Render terraform docs and push changes back to PR
-        uses: terraform-docs/gh-actions@v0.6.1
-        with:
-          working-dir: .
-          output-file: README.md
-          output-method: inject
-          git-push: "true"
+      #- name: Render terraform docs and push changes back to PR
+      #  uses: terraform-docs/gh-actions@v0.6.1
+      #  with:
+      #    working-dir: .
+      #    output-file: README.md
+      #    output-method: inject
+      #    git-push: "true"
