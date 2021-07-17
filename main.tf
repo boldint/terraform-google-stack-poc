@@ -27,7 +27,7 @@ module "gke" {
   name                              = format("%s-%s-%s", module.naming.id, var.gke_suffix, random_id.random.hex)
   regional                          = var.gke_regional
   region                            = var.gke_region
-  kubernetes_version                = data.google_container_engine_versions.gke_version.latest_master_version
+  kubernetes_version                = var.gke_kubernetes_version
   release_channel                   = var.gke_release_channel
   network                           = var.vpc_network
   subnetwork                        = var.gke_subnetwork

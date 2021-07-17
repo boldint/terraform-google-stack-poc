@@ -4,16 +4,40 @@ variable "gke_suffix" {
   description = "The suffix to be appended to the full cluster name (required)"
 }
 
+variable "gke_regional" {
+  type        = bool
+  description = "Whether is a regional cluster (zonal cluster if set false. WARNING: changing this after cluster creation is destructive!)"
+  default     = true
+}
+
 variable "gke_region" {
   type        = string
   description = "The region to host the cluster in (optional if zonal cluster / required if regional)"
   default     = null
 }
 
+variable "gke_zones" {
+  type        = list(string)
+  description = "The zones to host the cluster in (optional if regional cluster / required if zonal)"
+  default     = []
+}
+
 variable "gke_network_project_id" {
   type        = string
   description = "The project ID of the shared VPC's host (for shared vpc support)"
   default     = ""
+}
+
+variable "gke_kubernetes_version" {
+  type        = string
+  description = "The Kubernetes version of the masters. If set to 'latest' it will pull latest available version in the selected region."
+  default     = "latest"
+}
+
+variable "gke_master_authorized_networks" {
+  type        = list(object({ cidr_block = string, display_name = string }))
+  description = "List of master authorized networks. If none are provided, disallow external access (except the cluster node IPs, which GKE automatically whitelists)."
+  default     = []
 }
 
 variable "gke_subnetwork" {
@@ -241,9 +265,26 @@ variable "gke_monitoring_service" {
   default     = "monitoring.googleapis.com/kubernetes"
 }
 
+variable "gke_create_service_account" {
+  type        = bool
+  description = "Defines if service account specified to run nodes should be created."
+  default     = true
+}
+
 variable "gke_grant_registry_access" {
   type        = bool
   description = "Grants created cluster-specific service account storage.objectViewer role."
+  default     = false
+}
+
+variable "gke_skip_provisioners" {
+  type        = bool
+  description = "Flag to skip all local-exec provisioners. It breaks `stub_domains` and `upstream_nameservers` variables functionality."
+  default     = false
+}
+
+variable "gke_enable_binary_authorization" {
+  description = "Enable BinAuthZ Admission controller"
   default     = false
 }
 
