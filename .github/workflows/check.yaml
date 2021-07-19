@@ -55,7 +55,7 @@ jobs:
 
       - name: TF show example plan
         id: gen_plan_json
-        run: terraform show -json tfplan > tfplan.json
+        run: terraform show -json tfplan > examples/tfplan.json
         working-directory: examples/
 
       - name: Run infracost diff
@@ -66,6 +66,9 @@ jobs:
         with:
           entrypoint: /scripts/ci/diff.sh # Do not change
           path: examples
+
+      - name: List examples folder
+        run: ls -la examples/
 
       - name: Run Checkov action
         id: checkov
