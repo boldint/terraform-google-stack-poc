@@ -57,6 +57,10 @@ jobs:
           entrypoint: /scripts/ci/diff.sh # Do not change
           path: examples/tfplan
 
+      - name: Generate TF plan json file for Checkov
+        id: gen_plan_json
+        run: terraform -chdir=examples show -json tfplan | jq '.' > examples/tfplan.json
+
       - name: Run Checkov action
         id: checkov
         uses: bridgecrewio/checkov-action@v12
