@@ -28,14 +28,18 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
-      - name: Init example
+      - name: TF init example
         id: init_example
-        run: terraform -chdir=examples init
+        run: terraform init
+        working-directory: examples/
 
-      - name: Validate example
+      - name: TF validate example
         id: validate_example
-        run: terraform -chdir=examples validate
+        run: terraform validate
+        working-directory: examples/
 
+      # This following action will need to be ported to
+      # an internal repo or equivalent process
       - name: Run TFLint on example and report
         id: tflint_example
         uses: reviewdog/action-tflint@master
@@ -44,22 +48,27 @@ jobs:
           tflint_rulesets: "google"
           flags: "--module"
 
-      - name: Plan example
+      - name: TF plan example
         id: plan_example
-        run: terraform -chdir=examples plan -out=tfplan
+        run: terraform plan -out=tfplan
+        working-directory: examples/
 
-      # The following step runs a Terraform plan
+      - name: TF show example plan
+        id: gen_plan_json
+        run: terraform show -json tfplan
+        working-directory: examples/
+
+      - name: "Save TF Plan JSON"
+        run: echo '${{ steps.show.outputs.stdout }}' > plan.json
+
       - name: Run infracost diff
         uses: infracost/infracost-gh-action@v0.7.0
         env:
           INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           entrypoint: /scripts/ci/diff.sh # Do not change
-          path: examples/tfplan
-
-      - name: Generate TF plan json file for Checkov
-        id: gen_plan_json
-        run: terraform -chdir=examples show -json tfplan | jq '.' > examples/tfplan.json
+          path: plan.json
 
       - name: Run Checkov action
         id: checkov
