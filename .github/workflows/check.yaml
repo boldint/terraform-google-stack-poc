@@ -59,7 +59,7 @@ jobs:
         working-directory: examples/
 
       - name: "Save TF Plan JSON"
-        run: echo '${{ steps.show.outputs.stdout }}' > plan.json
+        run: echo '${{ steps.gen_plan_json.outputs.stdout }}' > plan.json
 
       - name: Run infracost diff
         uses: infracost/infracost-gh-action@v0.7.0
