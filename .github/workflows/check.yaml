@@ -55,7 +55,7 @@ jobs:
 
       - name: TF show example plan
         id: gen_plan_json
-        run: terraform show -json tfplan > examples/tfplan.json
+        run: terraform show -json tfplan > tfplan.json
         working-directory: examples/
 
       - name: Run infracost diff
